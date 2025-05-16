@@ -78,49 +78,56 @@ public class Agenda extends Contacto {
         }
         System.out.println("----Lista de contactos-----");
         for (Contacto cont : agenda){
-            System.out.println("- Nombre y apellido: " + cont.getNombre() + " " + cont.getApellido() + " - " + cont.getTelefono());
+            System.out.println("- Nombre y apellido: " + cont.getNombre() + " " + cont.getApellido() + " - Telefono: " + cont.getTelefono());
         }
         System.out.println("----Fin lista de contactos----");
     }
 
     public Contacto buscarContacto(String nombre, String apellido) {
         for (Contacto cont : agenda) {
-            if (cont.getNombre().equalsIgnoreCase(nombre) && cont.getApellido().equalsIgnoreCase(apellido)) {
-                System.out.println("El contacto " + nombre + " " + apellido + " su numero es " + cont.getTelefono());
+            if (cont.getNombre().equals(nombre) && cont.getApellido().equals(apellido)) {
+                System.out.println("¡Contacto encontrado!");
+                System.out.println("El contacto " + nombre + " " + apellido + " su numero de telefono es " + cont.getTelefono());
                 return cont;
-            } else {
-                System.out.println("El contacto no existe");
-                return null;
             }
-
         }
+        System.out.println("El contacto no existe");
         return null;
     }
 
     public void eliminarContacto(Contacto cont){
-        for (Contacto cont1 : agenda){
-            if (cont1 == cont){
-                agenda.remove(cont);
-                System.out.println("Contacto eliminado con exito");
-                break;
-            }else{
-                System.out.println("Contacto no encontrado");
+        boolean eliminado = false;
+
+        for (int i = 0; i < agenda.size(); i++) {
+            Contacto actual = agenda.get(i);
+            if (actual.getNombre().equalsIgnoreCase(cont.getNombre()) &&
+                    actual.getApellido().equalsIgnoreCase(cont.getApellido())) {
+                agenda.remove(i);
+                System.out.println("Contacto eliminado con éxito");
+                eliminado = true;
                 break;
             }
         }
+
+        if (!eliminado) {
+            System.out.println("Contacto no encontrado");
+        }
     }
 
-    public void modificarTelefono(String nombre, String apellido, int nuevoTelefono){
-        for (Contacto cont : agenda){
-            if (cont.getNombre().equalsIgnoreCase(nombre) && cont.getApellido().equalsIgnoreCase(apellido) ){
+    public void modificarTelefono(String nombre, String apellido, int nuevoTelefono) {
+        boolean encontrado = false;
+
+        for (Contacto cont : agenda) {
+            if (cont.getNombre().equalsIgnoreCase(nombre) && cont.getApellido().equalsIgnoreCase(apellido)) {
                 cont.setTelefono(nuevoTelefono);
-                System.out.println("Telefono actualizado!");
-            }else{
-                System.out.println("Contacto no encontrado");
+                System.out.println("¡Teléfono actualizado!");
+                encontrado = true;
+                break;
             }
         }
+
+        if (!encontrado) {
+            System.out.println("Contacto no encontrado");
+        }
     }
-
-
-
 }
