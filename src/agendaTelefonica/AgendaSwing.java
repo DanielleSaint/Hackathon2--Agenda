@@ -116,8 +116,7 @@ public class AgendaSwing extends JFrame {
                 Contacto contacto = new Contacto();
                 contacto.setNombre(nombreField.getText());
                 contacto.setApellido(apellidoField.getText());
-                contacto.setTelefono(Integer.parseInt(telefonoField.getText()));
-
+                contacto.setTelefono(Long.parseLong(telefonoField.getText()));
                 if (contacto.getNombre().isEmpty() && contacto.getApellido().isEmpty()) {
                     area.append("❌ No se puede añadir un contacto con nombre y apellido vacíos.\n");
                 } else if (agenda.agendaLlena()) {
@@ -183,7 +182,7 @@ public class AgendaSwing extends JFrame {
             try {
                 String nombre = nombreField.getText();
                 String apellido = apellidoField.getText();
-                int telefono = Integer.parseInt(telefonoField.getText());
+                Long telefono = Long.parseLong(telefonoField.getText());
                 agenda.modificarTelefono(nombre, apellido, telefono);
                 area.append("🔁 Teléfono actualizado correctamente.\n");
             } catch (Exception ex) {

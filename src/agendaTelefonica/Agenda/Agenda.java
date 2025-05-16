@@ -114,7 +114,7 @@ public class Agenda extends Contacto {
         }
     }
 
-    public void modificarTelefono(String nombre, String apellido, int nuevoTelefono) {
+    public void modificarTelefono(String nombre, String apellido, long nuevoTelefono) {
         boolean encontrado = false;
 
         for (Contacto cont : agenda) {
