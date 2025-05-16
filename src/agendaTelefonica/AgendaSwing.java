@@ -51,7 +51,6 @@ public class AgendaSwing extends JFrame {
         add(buttonPanel, BorderLayout.CENTER);
         add(scrollPane, BorderLayout.SOUTH);
 
-        // Acciones de botones
         // AÑADIR
         addButton.addActionListener((ActionEvent e) -> {
             area.setText("");
@@ -60,68 +59,93 @@ public class AgendaSwing extends JFrame {
                 contacto.setNombre(nombreField.getText());
                 contacto.setApellido(apellidoField.getText());
                 contacto.setTelefono(Integer.parseInt(telefonoField.getText()));
-                agenda.anadirContacto(contacto);
-                area.append("Contacto añadido.\n");
-                area.append("");
-                nombreField.setText("");
-                apellidoField.setText("");
-                telefonoField.setText("");
+
+                if (contacto.getNombre().isEmpty() && contacto.getApellido().isEmpty()) {
+                    area.append("No se puede añadir un contacto con nombre y apellido vacio\n");
+                } else if (agenda.agendaLlena()) {
+                    area.append("Agenda llena, no puedes ingresar mas contactos\n");
+                } else if (agenda.existeContacto(contacto)) {
+                    area.append("El contacto ya existe\n");
+                } else {
+                    if (agenda.espacioLibre()) {
+                        area.append("Aun puedes ingresar contactos. Tienes " + (9 - agenda.getAgenda().size())
+                                + " espacios disponibles, para un maximo de 10 contactos\n");
+                        agenda.anadirContacto(contacto);
+                        area.append("Contacto añadido exitosamente\n");
+                    } else {
+                        area.append("No puedes ingresar más contactos. Límite de 10 alcanzado.\n");
+                    }
+                }
             } catch (Exception ex) {
                 area.append("Error al añadir contacto.\n");
+            }
 
-            }
-        });
-
-        //LISTAR
-        listButton.addActionListener((ActionEvent e) -> {
-            area.setText("");
-            if (agenda.getAgenda().isEmpty()){
-                area.append("Lista vacia, nada para mostrar");
-            }
-                area.append("----Lista de contactos----- \n");
-            for (Contacto cont : agenda.getAgenda()){
-                area.append("- Nombre y apellido: " + cont.getNombre() + " " + cont.getApellido() + " - Telefono: " + cont.getTelefono() +"\n");
-            }
-                area.append("----Fin lista de contactos----");
             nombreField.setText("");
             apellidoField.setText("");
             telefonoField.setText("");
         });
 
-        //BUSCAR
+
+        // LISTAR
+        listButton.addActionListener((ActionEvent e) -> {
+            area.setText("");
+            if (agenda.getAgenda().isEmpty()) {
+                area.append("Lista vacia, nada para mostrar\n");
+            } else {
+                area.append("----Lista de contactos----- \n");
+                for (Contacto cont : agenda.getAgenda()) {
+                    area.append("- Nombre y apellido: " + cont.getNombre() + " " + cont.getApellido()
+                            + " - Telefono: " + cont.getTelefono() + "\n");
+                }
+                area.append("----Fin lista de contactos----\n");
+            }
+            nombreField.setText("");
+            apellidoField.setText("");
+            telefonoField.setText("");
+        });
+
+        // BUSCAR
         searchButton.addActionListener((ActionEvent e) -> {
             area.setText("");
             String nombre = nombreField.getText();
             String apellido = apellidoField.getText();
             Contacto c = agenda.buscarContacto(nombre, apellido);
             if (c != null) {
-                area.append("Encontrado: " + c.getNombre() + " " + c.getApellido() + " - " + c.getTelefono() + "\n");
+                area.append("¡Contacto encontrado!\n");
+                area.append("El contacto " + nombre + " " + apellido + " su numero de telefono es " + c.getTelefono() + "\n");
             } else {
-                area.append("No encontrado.\n");
+                area.append("El contacto no existe\n");
             }
             nombreField.setText("");
             apellidoField.setText("");
             telefonoField.setText("");
         });
 
-        //ACTUALIZAR
+        // ACTUALIZAR
         updateButton.addActionListener((ActionEvent e) -> {
             area.setText("");
             try {
                 String nombre = nombreField.getText();
                 String apellido = apellidoField.getText();
                 int telefono = Integer.parseInt(telefonoField.getText());
-                agenda.modificarTelefono(nombre, apellido, telefono);
-                area.append("Teléfono actualizado.\n");
-                nombreField.setText("");
-                apellidoField.setText("");
-                telefonoField.setText("");
+
+                Contacto c = agenda.buscarContacto(nombre, apellido);
+                if (c != null) {
+                    agenda.modificarTelefono(nombre, apellido, telefono);
+                    area.append("¡Teléfono actualizado!\n");
+                } else {
+                    area.append("Contacto no encontrado\n");
+                }
+
             } catch (Exception ex) {
                 area.append("Error al actualizar teléfono.\n");
             }
+            nombreField.setText("");
+            apellidoField.setText("");
+            telefonoField.setText("");
         });
 
-        //BORRAR
+        // ELIMINAR
         deleteButton.addActionListener((ActionEvent e) -> {
             area.setText("");
             String nombre = nombreField.getText();
@@ -129,9 +153,9 @@ public class AgendaSwing extends JFrame {
             Contacto c = agenda.buscarContacto(nombre, apellido);
             if (c != null) {
                 agenda.eliminarContacto(c);
-                area.append("Contacto eliminado.\n");
+                area.append("Contacto eliminado con éxito.\n");
             } else {
-                area.append("No encontrado para eliminar.\n");
+                area.append("Contacto no encontrado\n");
             }
             nombreField.setText("");
             apellidoField.setText("");
