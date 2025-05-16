@@ -52,7 +52,9 @@ public class AgendaSwing extends JFrame {
         add(scrollPane, BorderLayout.SOUTH);
 
         // Acciones de botones
+        // AÑADIR
         addButton.addActionListener((ActionEvent e) -> {
+            area.setText("");
             try {
                 Contacto contacto = new Contacto();
                 contacto.setNombre(nombreField.getText());
@@ -60,17 +62,35 @@ public class AgendaSwing extends JFrame {
                 contacto.setTelefono(Integer.parseInt(telefonoField.getText()));
                 agenda.anadirContacto(contacto);
                 area.append("Contacto añadido.\n");
+                area.append("");
+                nombreField.setText("");
+                apellidoField.setText("");
+                telefonoField.setText("");
             } catch (Exception ex) {
                 area.append("Error al añadir contacto.\n");
+
             }
         });
 
+        //LISTAR
         listButton.addActionListener((ActionEvent e) -> {
             area.setText("");
-            agenda.listarContactos(); // Este método debe imprimir o retornar la lista
+            if (agenda.getAgenda().isEmpty()){
+                area.append("Lista vacia, nada para mostrar");
+            }
+                area.append("----Lista de contactos----- \n");
+            for (Contacto cont : agenda.getAgenda()){
+                area.append("- Nombre y apellido: " + cont.getNombre() + " " + cont.getApellido() + " - Telefono: " + cont.getTelefono() +"\n");
+            }
+                area.append("----Fin lista de contactos----");
+            nombreField.setText("");
+            apellidoField.setText("");
+            telefonoField.setText("");
         });
 
+        //BUSCAR
         searchButton.addActionListener((ActionEvent e) -> {
+            area.setText("");
             String nombre = nombreField.getText();
             String apellido = apellidoField.getText();
             Contacto c = agenda.buscarContacto(nombre, apellido);
@@ -79,21 +99,31 @@ public class AgendaSwing extends JFrame {
             } else {
                 area.append("No encontrado.\n");
             }
+            nombreField.setText("");
+            apellidoField.setText("");
+            telefonoField.setText("");
         });
 
+        //ACTUALIZAR
         updateButton.addActionListener((ActionEvent e) -> {
+            area.setText("");
             try {
                 String nombre = nombreField.getText();
                 String apellido = apellidoField.getText();
                 int telefono = Integer.parseInt(telefonoField.getText());
                 agenda.modificarTelefono(nombre, apellido, telefono);
                 area.append("Teléfono actualizado.\n");
+                nombreField.setText("");
+                apellidoField.setText("");
+                telefonoField.setText("");
             } catch (Exception ex) {
                 area.append("Error al actualizar teléfono.\n");
             }
         });
 
+        //BORRAR
         deleteButton.addActionListener((ActionEvent e) -> {
+            area.setText("");
             String nombre = nombreField.getText();
             String apellido = apellidoField.getText();
             Contacto c = agenda.buscarContacto(nombre, apellido);
@@ -103,6 +133,9 @@ public class AgendaSwing extends JFrame {
             } else {
                 area.append("No encontrado para eliminar.\n");
             }
+            nombreField.setText("");
+            apellidoField.setText("");
+            telefonoField.setText("");
         });
 
         pack();

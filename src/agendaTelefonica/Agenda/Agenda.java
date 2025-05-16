@@ -130,4 +130,12 @@ public class Agenda extends Contacto {
             System.out.println("Contacto no encontrado");
         }
     }
+
+    public ArrayList<Contacto> getAgenda() {
+        return agenda;
+    }
+
+    public void setAgenda(ArrayList<Contacto> agenda) {
+        this.agenda = agenda;
+    }
 }
